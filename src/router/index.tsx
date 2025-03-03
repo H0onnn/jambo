@@ -1,12 +1,17 @@
 import { Suspense, lazy } from "react";
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Outlet } from "react-router-dom";
+import { Layout } from "@/shared/components/layout";
 
-const HomePage = lazy(() => import("@/pages/home"));
+const HomePage = lazy(() => import("@/pages/home/index"));
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    // element: <div>Hello 1!!@!@</div>,
+    element: (
+      <Layout>
+        <Outlet />
+      </Layout>
+    ),
     errorElement: <div>Error !</div>,
     children: [
       {
