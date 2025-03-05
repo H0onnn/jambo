@@ -5,11 +5,11 @@ import { CardResponse } from "@/features/home/types";
 const cardKeys = {
   all: ["cards"] as const,
   lists: () => [...cardKeys.all, "list"] as const,
-  list: (filters: string | undefined) => [...cardKeys.lists(), { filters }] as const,
+  list: (lastCardId: string | undefined) => [...cardKeys.lists(), { lastCardId }] as const,
 };
 
-const fetchCardData = async (page?: string): Promise<CardResponse> => {
-  const url = page ? `/v1/card?page=${page}` : "/v1/card";
+const fetchCardData = async (lastCardId?: string): Promise<CardResponse> => {
+  const url = lastCardId ? `/v1/card?page=${lastCardId}` : "/v1/card";
 
   try {
     const response = await api.get(url);
@@ -22,30 +22,36 @@ const fetchCardData = async (page?: string): Promise<CardResponse> => {
   }
 };
 
-export const useCardQuery = (page?: string) => {
+export const useCardQuery = (lastCardId?: string) => {
   const queryClient = useQueryClient();
 
-  const initialData = queryClient.getQueryData<CardResponse>(cardKeys.list(page));
+  const initialData = queryClient.getQueryData<CardResponse>(cardKeys.list(lastCardId));
 
   return useInfiniteQuery<CardResponse, Error, InfiniteData<CardResponse>>({
-    queryKey: cardKeys.list(page),
+    queryKey: cardKeys.list(lastCardId),
     queryFn: ({ pageParam }) => {
       if (!pageParam && initialData) {
         return initialData;
       }
       return fetchCardData(pageParam as unknown as string);
     },
-    initialPageParam: page,
-    getNextPageParam: (lastPage, allPages) => {
+    initialPageParam: lastCardId,
+    getNextPageParam: (lastPage) => {
       if (lastPage.hasNext === false) {
         return undefined;
       }
-      return allPages.length + 1;
+
+      if (lastPage.list.length > 0) {
+        const lastItem = lastPage.list[lastPage.list.length - 1];
+        return lastItem.card.cardId;
+      }
+
+      return undefined;
     },
     initialData: initialData
       ? {
           pages: [initialData],
-          pageParams: [page],
+          pageParams: [lastCardId],
         }
       : undefined,
   });
