@@ -17,7 +17,7 @@ export const HeaderLayout = (props: HeaderLayoutProps) => {
       className={cn([
         "fixed top-0 left-0 right-0 flex items-center justify-center h-[68px]",
         "bg-white z-50 p-2 md:px-4 md:py-3",
-        "border-b-[0.5px] border-solid border-grayf4",
+        "border-b-[0.5px] border-solid border-gray-f4",
         containerClassName,
       ])}
     >
