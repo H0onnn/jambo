@@ -4,10 +4,12 @@ export interface CardResponse {
 }
 
 export interface List {
-  cardType: string;
+  cardType: CardType;
   profile: Profile;
   card: Card;
 }
+
+export type CardType = "POST" | "VIDEO";
 
 export interface Profile {
   nickName: string;
@@ -24,7 +26,8 @@ export interface Card {
   category: Category;
   title: string;
   body?: string;
-  cardImage: CardImage[];
+  cardImage?: CardImage[];
+  video?: Video[];
   viewCount: number;
   userCount: number;
   createdAt: number;
@@ -37,4 +40,8 @@ export interface Category {
 
 export interface CardImage {
   imageUrl: string;
+}
+
+export interface Video {
+  videoUrl: string;
 }
