@@ -1,6 +1,7 @@
 import { Suspense, lazy } from "react";
 import { createBrowserRouter, Outlet } from "react-router-dom";
 import { Layout } from "@/shared/components/layout";
+import { ErrorFallback } from "@/shared/components/fallback";
 import { CardFallback } from "@/features/home/components/card-list/skeleton";
 
 const HomePage = lazy(() => import("@/pages/home/index"));
@@ -13,7 +14,11 @@ export const router = createBrowserRouter([
         <Outlet />
       </Layout>
     ),
-    errorElement: <div>Error !</div>,
+    errorElement: (
+      <Layout>
+        <ErrorFallback />,
+      </Layout>
+    ),
     children: [
       {
         index: true,
