@@ -1,5 +1,5 @@
 import api from "@/shared/apis";
-import { useInfiniteQuery, useQueryClient, type InfiniteData } from "@tanstack/react-query";
+import { useSuspenseInfiniteQuery, useQueryClient, type InfiniteData } from "@tanstack/react-query";
 import { CardResponse } from "@/features/home/types";
 
 const cardKeys = {
@@ -27,7 +27,7 @@ export const useCardQuery = (lastCardId?: string) => {
 
   const initialData = queryClient.getQueryData<CardResponse>(cardKeys.list(lastCardId));
 
-  return useInfiniteQuery<CardResponse, Error, InfiniteData<CardResponse>>({
+  return useSuspenseInfiniteQuery<CardResponse, Error, InfiniteData<CardResponse>>({
     queryKey: cardKeys.list(lastCardId),
     queryFn: ({ pageParam }) => {
       if (!pageParam && initialData) {
